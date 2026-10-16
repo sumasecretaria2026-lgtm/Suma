@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#174B4B">
+<title>Suma</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='7' fill='%23174B4B'/%3E%3Cellipse cx='14' cy='12' rx='3' ry='8' transform='rotate(-38 14 24)' fill='%232A8887'/%3E%3Cellipse cx='14' cy='12' rx='3' ry='8' transform='rotate(38 14 24)' fill='%23D38EA2'/%3E%3Cellipse cx='14' cy='11' rx='3' ry='9' fill='%23FAF6F0'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1F2D2D;--pet:#174B4B;--teal:#2A8887;--sage:#AFC4B5;--mau:#A56D7F;--rose:#D38EA2;--cor:#D19B94;--bg:#FAF6F0;--ln:#E6DED3;--mut:#4A5A5A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:600 15px/1.35 'Nunito Sans',system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+h1,h2,h3{margin:0;color:var(--pet);font-weight:800}
+h1{font-size:24px}h2{font-size:16px}
+.app{min-height:100vh;padding-bottom:96px}
+main{max-width:720px;margin:0 auto;padding:20px 20px 0}
+.view{display:none;flex-direction:column;gap:12px}.view.on{display:flex}
+.logo{display:flex;align-items:center;gap:8px;font-size:28px;font-weight:800;color:var(--pet);letter-spacing:-.5px}
+.sub{color:var(--mut);font-size:13px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:14px;box-shadow:0 1px 3px rgba(23,75,75,.08)}
+.msg{background:#E4EDE7;font-weight:700}
+.row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--ln);border-radius:14px;padding:9px 12px}
+.row.hl{border:2px solid var(--teal)}
+.t{width:92px;flex:none;font-size:12px;font-weight:800;color:var(--pet)}
+.grow{flex:1}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.btn{height:44px;border-radius:14px;border:1.5px solid var(--pet);background:var(--pet);color:#fff;padding:0 18px;font-weight:700}
+.btn.s{background:transparent;color:var(--pet)}
+.days{display:flex;gap:4px}
+.days button{flex:1;min-height:44px;border-radius:14px;border:1px solid var(--ln);background:#fff;font-weight:700}
+.days button[aria-pressed=true]{background:var(--pet);color:#fff}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.opts button{min-height:44px;border-radius:14px;border:1px solid var(--ln);background:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.opts button[aria-pressed=true]{background:#D7EBEA;border:2px solid var(--teal)}
+.bar{display:flex;gap:3px}.bar div{height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;overflow:hidden}
+.ck{width:22px;height:22px;flex:none;border-radius:6px;border:2px solid var(--teal);background:#fff;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.ck[aria-checked=true]{background:var(--teal)}
+.ck[aria-checked=true]::after{content:"";width:9px;height:5px;border:solid #fff;border-width:0 0 2px 2px;transform:rotate(-45deg) translate(1px,-1px)}
+.done{text-decoration:line-through;color:var(--mut)}
+.x{border:0;background:none;color:var(--mut);font-size:20px;min-width:36px;min-height:36px}
+form.add{display:flex;gap:6px;flex-wrap:wrap}
+input,select{height:44px;border:1px solid var(--ln);border-radius:12px;padding:0 10px;font:inherit;background:#fff}
+input[type=text]{flex:1;min-width:140px}
+.hero{background:var(--pet);color:#fff;border-radius:18px;padding:16px}
+.hero b{font-size:24px;display:block}
+.tag{padding:3px 9px;border-radius:999px;background:#E4EDE7;font-size:12px;font-weight:700}
+ul.l{margin:6px 0 0;padding-left:18px}
+.toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#FBE7ED;border:1px solid var(--rose);border-radius:14px;padding:9px 14px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;transition:.25s;max-width:92vw;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+nav{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));background:var(--pet);border-radius:22px;padding:6px;display:flex;gap:2px;box-shadow:0 4px 12px rgba(23,75,75,.25);max-width:720px;margin:0 auto}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border:0;border-radius:16px;background:none;color:#E8F0EE;font-size:12px;font-weight:700}
+nav button[aria-current=page]{background:var(--sage);color:var(--pet)}
+nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.row{flex-wrap:wrap}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.col{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.kc{border:1px solid var(--ln);border-radius:12px;padding:8px;background:#FAF6F0}
+.sm{min-height:36px;min-width:36px;border-radius:10px;border:1px solid var(--pet);background:#fff;color:var(--pet);padding:0 10px;font-weight:700;font-size:13px}
+.mon{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mon button{min-height:52px;border-radius:10px;border:1px solid var(--ln);background:#fff;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;padding:3px;color:var(--ink)}
+.mon button[aria-pressed=true]{border:2px solid var(--teal);background:#D7EBEA}
+.mon small{font-size:11px;color:var(--pet);font-weight:800}
+@media(min-width:900px){
+ .app{padding:0 0 0 220px}
+ nav{left:0;top:0;bottom:0;right:auto;width:196px;margin:16px;border-radius:24px;flex-direction:column;justify-content:flex-start;gap:6px;padding:16px 10px;max-width:none}
+ nav button{flex:none;flex-direction:row;gap:10px;padding:12px;font-size:15px}
+ .toast{bottom:32px}
+}
+@media print{nav,.noprint,.toast{display:none!important}.app{padding:0}.view{display:none!important}#v-menu{display:flex!important}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<main>
+<section class="view on" id="v-hoy" aria-label="Hoy"></section>
+<section class="view" id="v-semana" aria-label="Semana"></section>
+<section class="view" id="v-trabajo" aria-label="Trabajo"></section>
+<section class="view" id="v-menu" aria-label="Menú y compra"></section>
+<section class="view" id="v-entreno" aria-label="Entrenamiento"></section>
+<section class="view" id="v-planes" aria-label="Actividades y planes"></section>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<nav id="nav" aria-label="Principal"></nav>
+<script>
+const $=s=>document.querySelector(s);
+const SH={sq:'<rect x="2" y="2" width="12" height="12" rx="3"/>',ci:'<circle cx="8" cy="8" r="6.5"/>',tr:'<polygon points="8,1.5 15,14 1,14"/>',di:'<polygon points="8,1 15,8 8,15 1,8"/>',hx:'<polygon points="8,1 14.5,5 14.5,11 8,15 1.5,11 1.5,5"/>',st:'<polygon points="8,1 10,6 15.5,6.2 11.2,9.6 12.7,15 8,11.9 3.3,15 4.8,9.6 .5,6.2 6,6"/>'};
+const sh=(k,c,s=13)=>`<svg width="${s}" height="${s}" viewBox="0 0 16 16" fill="${c}" aria-hidden="true">${SH[k]}</svg>`;
+const CAT={Trabajo:['sq','#174B4B','#DCE8E6'],Familia:['ci','#A56D7F','#F1E3E8'],Gimnasio:['tr','#2A8887','#D7EBEA'],Descanso:['di','#5E8068','#E4EDE7'],Ocio:['hx','#B0685E','#F6E6E3']};
+const chip=c=>`<span class="chip" style="background:${CAT[c][2]}">${sh(CAT[c][0],CAT[c][1],12)}${c}</span>`;
+const LOGO='<svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="12" rx="4" ry="9" transform="rotate(-38 14 25)" fill="#2A8887"/><ellipse cx="14" cy="12" rx="4" ry="9" transform="rotate(38 14 25)" fill="#D38EA2"/><ellipse cx="14" cy="11" rx="4" ry="10" fill="#174B4B"/><circle cx="14" cy="25" r="2" fill="#174B4B"/></svg>';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// Estado guardado en el dispositivo
+let S={tasks:[],train:{},shop:{},blocks:[],ov:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem('suma')||'{}'))}catch(e){}
+S.tasks.forEach(t=>{t.st=t.st||(t.d?'l':'p')});
+const save=()=>{try{localStorage.setItem('suma',JSON.stringify(S))}catch(e){}};
+const NAV=[['hoy','Hoy','<circle cx="10" cy="10" r="4"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2"/>'],['semana','Semana','<rect x="3" y="4" width="14" height="13" rx="3"/><path d="M3 8h14M7 2v3M13 2v3"/>'],['trabajo','Trabajo','<rect x="3" y="6" width="14" height="10" rx="2"/><path d="M7 6V4h6v2"/>'],['menu','Menú','<path d="M4 16c0-7 5-12 12-12 0 7-5 12-12 12zM4 16l7-7"/>'],['entreno','Entreno','<path d="M3 10h14M5 6v8M15 6v8M2 8v4M18 8v4"/>'],['planes','Planes','<path d="M5 17V3M5 4h10l-2 3 2 3H5"/>']];
+$('#nav').innerHTML=NAV.map(([id,n,p])=>`<button data-v="${id}"><svg viewBox="0 0 20 20" aria-hidden="true">${p}</svg>${n}</button>`).join('');
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));document.querySelectorAll('#nav button').forEach(b=>b.toggleAttribute('aria-current',b.dataset.v===id)||(b.dataset.v===id&&b.setAttribute('aria-current','page')));document.querySelectorAll('#nav button').forEach(b=>b.dataset.v===id?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));scrollTo(0,0)}
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.v)};
+let tt;function toast(t){const e=$('#toast');e.innerHTML=sh('st','#D38EA2',16)+esc(t);e.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('on'),2600)}
+// Horario
+const WK=[['9:00','13:00','Estudio y trabajo','Trabajo'],['13:00','14:00','Descanso, merienda y preparar el gimnasio','Descanso'],['14:00','15:30','Gimnasio','Gimnasio'],['15:50','17:00','Comida y preparar la cena','Descanso'],['17:00','19:00','Recoger a mi hija y tiempo juntas','Familia'],['19:00','22:00','Aseo, cena y rutina de sueño','Familia'],['22:00','22:30','A la cama','Descanso']];
+const WF=[...WK.slice(0,4),['17:00','18:00','Recoger a mi hija y tiempo juntas','Familia'],['18:00','19:00','Estudiar para la licencia (gimnasia de mi hija)','Trabajo'],...WK.slice(5)];
+const SCH=[WK,WK,WF,WK,WF,[['11:30','13:00','Gimnasio','Gimnasio']],[['Todo el día','','Descanso y tiempo libre','Ocio'],['Según plan','','Plan familiar (ver Planes)','Familia']]];
+const DN=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const dow=d=>(d.getDay()+6)%7;
+const mins=h=>{const m=/^(\d+):(\d+)$/.exec(h);return m?+m[1]*60+ +m[2]:null};
+const fmt=m=>Math.floor(m/60)+':'+String(m%60).padStart(2,'0');
+const now=new Date(),TD=dow(now),ISO=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+let sv='s',mo=0,md=ISO,eb=null;
+const ST={p:'Por hacer',e:'En marcha',l:'Logrado'};
+const LK='<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#174B4B" stroke-width="1.6" stroke-linecap="round" role="img" aria-label="Bloque fijo"><rect x="2.5" y="6" width="9" height="6.5" rx="2"/><path d="M4.5 6V4.5a2.5 2.5 0 015 0V6"/></svg>';
+const ck=t=>`<button class="ck" role="checkbox" aria-checked="${t.d}" aria-label="Completar ${esc(t.t)}" data-done="${t.id}"></button>`;
+const dayBlocks=d=>{const o=[];SCH[d].forEach((b,i)=>{const k=d+'|'+i,v=S.ov[k];if(v===null)return;const x=v||{};o.push({k,s:x.s||b[0],e:x.e??b[1],t:x.t||b[2],c:x.c||b[3],fx:1})});S.blocks.filter(b=>b.d===d).forEach(b=>o.push({id:b.id,s:b.s,e:b.e,t:b.t,c:b.c}));return o.sort((a,b)=>(mins(a.s)??-1)-(mins(b.s)??-1))};
+const LONG=now.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+// Entrenamiento
+const TR={'Tren superior':['sq',['Press de banca','Remo con polea','Press de hombro','Jalón al pecho','Curl de bíceps y tríceps en polea']],'Tren inferior':['di',['Sentadilla','Peso muerto rumano','Prensa','Zancadas','Elevación de talones']],'Cardio':['ci',['Bicicleta, remo o elíptica a ritmo moderado','Trabajo de movilidad al terminar']],'Cuerpo completo':['hx',['Sentadilla','Press con mancuernas','Remo con barra','Plancha','Farmer walk']]};
+const PLAN=['Tren superior','Tren inferior','Cuerpo completo','Cardio','Tren superior','Tren inferior',null];
+const todayTrain=()=>S.train[ISO]||PLAN[TD]||null;
+if(!S.train[ISO]&&TD===3)S.train[ISO]='Cardio';
+// Menú
+const MENU=[['Tostada integral con huevo y fruta','Fruta y un puñado de nueces','Yogur natural con fruta','Pollo al horno con arroz y verduras','Salmón a la plancha con patata cocida'],['Avena con leche y plátano','Tostada con pavo','Actimel y fruta','Lentejas con verduras y pollo','Tortilla española con ensalada'],['Yogur con cereales integrales y fruta','Hummus con palitos de zanahoria','Yogur bebible bajo en azúcar','Merluza al horno con patata','Crema de calabaza y huevo duro'],['Tortilla francesa y pan integral','Queso fresco con fruta','Yogur natural con pera','Pavo a la plancha con pasta integral','Dorada al horno con verduras'],['Tostada con aguacate y huevo','Fruta y almendras','Actimel y galletas integrales','Pollo con arroz y guisantes','Tortilla de calabacín'],['Tortitas de avena y plátano','Tostada con pavo','Yogur con fruta','Salmón con quinoa y brócoli','Crema de verduras y huevos revueltos'],['Tostada con tomate y huevo','Fruta de temporada','Yogur natural','Pollo asado con patatas','Revuelto de champiñones']];
+const SHOP=[['Pechuga de pollo','1 kg'],['Filetes de pavo','500 g'],['Salmón','600 g'],['Merluza o dorada','600 g'],['Huevos','18 ud.'],['Yogur natural','12 ud.'],['Actimel o yogur bebible','7 ud.'],['Arroz','500 g'],['Pasta integral','500 g'],['Lentejas','400 g'],['Patatas','1,5 kg'],['Verdura variada','2 kg'],['Fruta de temporada','3 kg'],['Avena','500 g'],['Pan integral','1 ud.'],['Nueces y almendras','200 g']];
+let selDay=TD,mDay=TD;
+const dayBtns=(cur,fn)=>`<div class="days" role="group" aria-label="Día">${'LMXJVSD'.split('').map((d,i)=>`<button aria-pressed="${i===cur}" data-d="${i}" data-f="${fn}" aria-label="${DN[i]}">${d}</button>`).join('')}</div>`;
+function blocks(arr,hl,ed){const n=now.getHours()*60+now.getMinutes();const nx=hl?arr.findIndex(b=>mins(b.s)!==null&&mins(b.e)>n):-1;return arr.map((b,i)=>`<div class="row${i===nx?' hl':''}"><span class="t">${b.e?b.s+'–'+b.e:b.s}</span><span class="grow">${esc(b.t)}${i===nx?'<br><span class="sub" style="font-weight:800;color:var(--pet)">'+(mins(b.s)<=n?'Ahora':'Siguiente')+'</span>':''}</span>${chip(b.c)}${b.fx?LK:''}${ed?`<button class="sm" data-eb="${b.k||b.id}" aria-label="Editar ${esc(b.t)}">Editar</button>`:''}</div>`).join('')}
+function rHoy(){const pend=S.tasks.filter(t=>!t.d);const tr=todayTrain();
+$('#v-hoy').innerHTML=`<div><div class="logo">${LOGO}suma</div><div class="sub" style="text-transform:capitalize">${LONG}</div></div>
+<div class="card msg">Cada bloque suma. ${tr?'Hoy toca: '+tr.toLowerCase()+'.':'Hoy es día de descanso.'}</div>
+<h2>Agenda de hoy</h2><div style="display:flex;flex-direction:column;gap:6px">${blocks(dayBlocks(TD).map(b=>b.c==='Gimnasio'&&tr?{...b,t:'Gimnasio · '+tr}:b),true)}</div>
+<h2>Pendientes</h2>${pend.length?pend.map(t=>`<div class="row"><button class="ck" role="checkbox" aria-checked="false" aria-label="Completar ${esc(t.t)}" data-done="${t.id}"></button><span class="grow">${esc(t.t)}</span></div>`).join(''):'<div class="card sub">Sin pendientes. Añade tareas en Trabajo.</div>'}`}
+function rMes(){const f=new Date(now.getFullYear(),now.getMonth()+mo,1),y=f.getFullYear(),m=f.getMonth(),n=new Date(y,m+1,0).getDate(),lead=dow(f),iso=d=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;let c='';for(let i=0;i<lead;i++)c+='<span></span>';for(let d=1;d<=n;d++){const k=S.tasks.filter(t=>t.f===iso(d)).length;c+=`<button data-md="${iso(d)}" aria-pressed="${md===iso(d)}" aria-label="${d}, ${k} tareas">${d}${k?`<small>${k} ${k>1?'tareas':'tarea'}</small>`:''}</button>`}
+const L=S.tasks.filter(t=>t.f===md);return `<div style="display:flex;justify-content:space-between;align-items:center"><button class="sm" data-mo="-1" aria-label="Mes anterior">‹</button><h2 style="text-transform:capitalize">${f.toLocaleDateString('es-ES',{month:'long',year:'numeric'})}</h2><button class="sm" data-mo="1" aria-label="Mes siguiente">›</button></div><div class="mon">${'LMXJVSD'.split('').map(d=>`<b class="sub" style="text-align:center">${d}</b>`).join('')}${c}</div><h2 style="text-transform:capitalize">${new Date(md+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</h2>${L.length?L.map(t=>`<div class="row">${ck(t)}<span class="grow ${t.d?'done':''}">${esc(t.t)}</span><span class="tag">${ST[t.st]}</span></div>`).join(''):'<div class="card sub">Sin tareas con fecha este día.</div>'}`}
+function rSemana(){const ed=eb!==null?dayBlocks(selDay).find(b=>String(b.k||b.id)===String(eb)):null;const tv=h=>/^\d+:\d+$/.test(h||'')?h.padStart(5,'0'):'';
+$('#v-semana').innerHTML=`<h1>Semana</h1><div class="sub">Los bloques con candado son fijos: te pregunto antes de cambiarlos.</div>
+<div class="opts"><button data-sv="s" aria-pressed="${sv==='s'}">Semana</button><button data-sv="m" aria-pressed="${sv==='m'}">Mes</button></div>
+${sv==='m'?rMes():`${dayBtns(selDay,'s')}<h2>${DN[selDay]}</h2><div style="display:flex;flex-direction:column;gap:6px">${blocks(dayBlocks(selDay),false,true)}</div>
+<form class="card add" id="fb"><h2 style="width:100%">${ed?'Editar bloque':'Añadir bloque'}</h2><input type="text" id="bt" placeholder="Actividad" aria-label="Actividad" required value="${ed?esc(ed.t):''}"><input type="time" id="bs" aria-label="Inicio" value="${ed?tv(ed.s):''}"><input type="time" id="be" aria-label="Fin" value="${ed?tv(ed.e):''}"><select id="bc" aria-label="Categoría">${Object.keys(CAT).map(c=>`<option${ed&&ed.c===c?' selected':''}>${c}</option>`).join('')}</select><select id="bd" aria-label="Día">${DN.map((n,i)=>`<option value="${i}"${i===selDay?' selected':''}>${n}</option>`).join('')}</select><button class="btn">Guardar</button>${ed?'<button type="button" class="btn s" data-bdel="1">Borrar</button><button type="button" class="btn s" data-bcan="1">Cancelar</button>':''}</form>`}`}
+function rTrabajo(){let m=540,used=0;const open=S.tasks.filter(t=>!t.d);
+const segs=open.map((t,i)=>{t.s=m;m+=t.m;used+=t.m;return`<div style="flex:${t.m};background:${i%2?'#D7EBEA':'#DCE8E6'}" title="${esc(t.t)}">${i+1}</div>`}).join('');
+const free=Math.max(0,240-used),O='pel';
+const board=['p','e','l'].map((q,ci)=>`<div class="col"><h3 style="font-size:14px">${sh(['sq','ci','st'][ci],['#174B4B','#2A8887','#D38EA2'][ci],13)} ${ST[q]}</h3>${S.tasks.filter(t=>t.st===q).map(t=>`<div class="kc"><div class="${t.d?'done':''}">${esc(t.t)}</div><div class="sub">${t.m} min${t.f?' · '+t.f:''}</div><div style="display:flex;gap:4px;margin-top:6px">${ci>0?`<button class="sm" data-mv="${t.id}|-1" aria-label="Mover a ${ST[O[ci-1]]}">◀</button>`:''}${ci<2?`<button class="sm" data-mv="${t.id}|1" aria-label="Mover a ${ST[O[ci+1]]}">▶</button>`:''}</div></div>`).join('')||'<span class="sub">Vacío</span>'}</div>`).join('');
+$('#v-trabajo').innerHTML=`<h1>Trabajo</h1><div class="sub">Bloque de 9:00 a 13:00 · 4 h. Las mismas tareas aparecen en el tablero, el calendario y los logros.</div>
+<div class="card"><div class="bar" aria-hidden="true">${segs}${free?`<div style="flex:${free};border:1.5px dashed var(--mut)"></div>`:''}</div><div class="sub" style="margin-top:6px">${used>240?'Te pasas '+(used-240)+' min del bloque.':'Libre: '+free+' min'}</div></div>
+<form class="add" id="fa"><input type="text" id="tg" placeholder="Pendiente (ej. Informe)" aria-label="Pendiente al que pertenece"><input type="text" id="tn" placeholder="Tarea" aria-label="Tarea" required><select id="tm" aria-label="Duración"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="45">45 min</option><option value="60">1 h</option><option value="90">1,5 h</option><option value="120">2 h</option></select><input type="date" id="tf" aria-label="Fecha (opcional)"><button class="btn">Añadir tarea</button></form>
+<h2>Orden de trabajo</h2>
+${S.tasks.length?S.tasks.map(t=>{const i=open.indexOf(t);return`<div class="row">${ck(t)}<span class="grow ${t.d?'done':''}">${t.d?'':(i+1)+'. '}${esc(t.t)} ${t.g?'<span class="tag">'+esc(t.g)+'</span>':''}<br><span class="sub">${t.d?'Logrado':fmt(t.s)+' · '+t.m+' min'}${t.f?' · '+t.f:''}</span></span><button class="sm" data-up="${t.id}" aria-label="Subir ${esc(t.t)}">▲</button><button class="sm" data-dn="${t.id}" aria-label="Bajar ${esc(t.t)}">▼</button><button class="x" aria-label="Borrar ${esc(t.t)}" data-del="${t.id}">×</button></div>`}).join(''):'<div class="card sub">Aún no hay tareas. Añade la primera.</div>'}
+<h2>Tablero</h2><div class="board">${board}</div>`}
+function rMenu(){const d=MENU[mDay];$('#v-menu').innerHTML=`<h1>Menú y compra</h1><div class="sub">Para 3 personas · se consulta una vez por semana, fuera de tu agenda</div>
+<div class="noprint">${dayBtns(mDay,'m')}</div>
+<div class="card"><h2>${DN[mDay]}</h2><ul class="l" style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px"><li><b>Desayuno:</b> ${d[0]}</li><li><b>Merienda adultos:</b> ${d[1]}</li><li><b>Merienda peque:</b> ${d[2]}</li><li><b>Comida:</b> ${d[3]}</li><li><b>Cena:</b> ${d[4]}</li></ul></div>
+<div class="card"><h2>Lista de la compra · Mercadona</h2><div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">${SHOP.map((s,i)=>`<div class="row" style="border:0;padding:4px 0"><button class="ck noprint" role="checkbox" aria-checked="${!!S.shop[i]}" aria-label="Comprado: ${s[0]}" data-shop="${i}"></button><span class="grow ${S.shop[i]?'done':''}">${s[0]}</span><span class="sub">${s[1]}</span></div>`).join('')}</div><div class="sub" style="margin-top:8px">Cantidades orientativas para la semana. Revisa disponibilidad en Mercadona.</div></div>
+<div class="card" style="display:none" id="pm"></div>
+<button class="btn noprint" id="pdf">Descargar PDF</button><div class="sub noprint">Se abre el cuadro de impresión: elige «Guardar como PDF».</div>`;
+$('#pm').remove()}
+function rEntreno(){const tr=todayTrain();$('#v-entreno').innerHTML=`<h1>Entreno</h1><div class="sub" style="text-transform:capitalize">${LONG}</div>
+<div class="hero"><span class="sub" style="color:#DCE8E6">Sesión de hoy</span><b>${tr||'Descanso activo'}</b><span>${TD<5?'Gimnasio '+(TD<5?'14:00–15:30':''):TD===5?'Gimnasio 11:30–13:00':'Hoy toca descansar o dar un paseo'} · Duración: por definir</span></div>
+${tr&&TR[tr]?`<div class="card"><h2>Propuesta</h2><ul class="l">${TR[tr][1].map(e=>`<li>${e}</li>`).join('')}</ul></div>`:''}
+<h2>Cambiar el entrenamiento de hoy</h2><div class="opts">${Object.keys(TR).map(k=>`<button aria-pressed="${tr===k}" data-tr="${k}">${sh(TR[k][0],'#2A8887')}${k}</button>`).join('')}</div>
+<div class="card"><h2>Esta semana</h2><div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">${PLAN.slice(0,6).map((p,i)=>`<div><b style="display:inline-block;width:80px;color:var(--pet)">${DN[i]}</b>${i===TD?(tr||p):p}</div>`).join('')}</div></div>
+<div class="sub">Propuesta orientativa, no es consejo médico. Adáptala si notas molestias.</div>`}
+const HOME=[['Volcán de bicarbonato','Bicarbonato, vinagre y colorante con un adulto presente.','Ciencia','1 h'],['Detectives de hojas','Recoger, clasificar y dibujar hojas de árbol.','Naturaleza','1,5 h'],['Semillas en algodón','Germinar lentejas y anotar cómo crecen cada día.','Ciencia','30 min + seguimiento'],['Cocinamos juntas','Tortilla de verduras midiendo y contando ingredientes.','Cocina','1 h'],['Flota o se hunde','Probar qué objetos flotan y anotar hipótesis y resultados.','Ciencia','45 min'],['Mapa del tesoro','Dibujar un mapa de la casa y esconder un tesoro con pistas.','Lectura y orientación','1 h'],['Terrario en un frasco','Montar un terrario pequeño con tierra y plantas.','Naturaleza','2 h'],['Circuito con pila','Encender una bombilla pequeña con pila y cable, con adulto.','Ciencia','1 h'],['Teatro de sombras','Figuras de cartulina, una linterna y una historia.','Arte y lengua','1,5 h'],['Tienda de juguete','Sumar y restar con monedas de juguete.','Matemáticas','1 h'],['Arcoíris de colores','Mezclar colores primarios y observar los cambios.','Ciencia y arte','45 min'],['Gran proyecto: cohete de cartón','Diseñar, construir y decorar un cohete y explicar cómo despega.','Construcción','hasta 4 h']];
+const PLANS=[['Real Jardín Botánico','Metro Atocha o Retiro','o'],['Parque del Retiro y Palacio de Cristal','Metro Retiro o Ibiza','o'],['Casa de Campo y Teleférico','Metro Batán o Argüelles','o'],['Faro de Moncloa y Parque del Oeste','Metro Moncloa','o'],['Museo Nacional de Ciencias Naturales','Metro Gregorio Marañón','i'],['Museo del Ferrocarril','Cercanías Delicias','i'],['Planetario de Madrid','Metro Méndez Álvaro','i']];
+function rPlanes(){const wk=Math.floor((now-new Date(now.getFullYear(),0,1))/6048e5),out=[2,3,4,8,9,10].includes(now.getMonth()),M=PLANS.filter(p=>(p[2]==='o')===out),P=[M[wk%M.length],M[(wk+1)%M.length]];
+$('#v-planes').innerHTML=`<h1>Actividades y planes</h1><div class="sub">Propuestas nuevas cada semana</div><h2>En casa con mi hija · 6 años</h2>
+${[0,1,2,3].map(i=>HOME[(wk*4+i)%12]).map(a=>`<div class="card"><b>${a[0]}</b><div class="sub" style="margin:2px 0 8px">${a[1]}</div><span class="tag">${a[2]}</span> <span class="tag">${a[3]}</span> <span class="tag">Seguro</span></div>`).join('')}
+<h2>Domingo · plan familiar en Madrid</h2><div class="sub">${out?'Época de temperaturas suaves: plan al aire libre.':'Con frío o calor intenso: mejor espacios cubiertos.'} Presupuesto máximo: 30 € sin transporte.</div>
+${P.map(p=>`<div class="card"><b>${p[0]}</b><div class="sub" style="margin:2px 0 8px">${p[1]}</div>${chip('Ocio')} <span class="tag">Transporte público</span> <span class="tag">Máx. 30 €</span><div style="margin-top:10px"><a class="btn s" style="display:inline-flex;align-items:center;text-decoration:none" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(p[0]+' Madrid horario precio entradas')}">Ver horario y precio actuales</a></div></div>`).join('')}`}
+function all(){rHoy();rSemana();rTrabajo();rMenu();rEntreno();rPlanes()}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+if(b.dataset.f==='s'){selDay=+b.dataset.d;rSemana()}
+else if(b.dataset.f==='m'){mDay=+b.dataset.d;rMenu()}
+else if(b.dataset.done){const t=S.tasks.find(x=>x.id==b.dataset.done);t.d=!t.d;t.st=t.d?'l':'p';save();all();if(t.d)toast(S.tasks.some(x=>!x.d)?'¡Lograda! '+t.t:'¡Objetivo cumplido! Todo logrado')}
+else if(b.dataset.del){S.tasks=S.tasks.filter(x=>x.id!=b.dataset.del);save();all()}
+else if(b.dataset.shop){S.shop[b.dataset.shop]=!S.shop[b.dataset.shop];save();rMenu()}
+else if(b.dataset.tr){S.train[ISO]=b.dataset.tr;save();rEntreno();rHoy()}
+else if(b.dataset.sv){sv=b.dataset.sv;eb=null;rSemana()}
+else if(b.dataset.md){md=b.dataset.md;rSemana()}
+else if(b.dataset.mo){mo+=+b.dataset.mo;rSemana()}
+else if(b.dataset.eb){const k=b.dataset.eb;if(k.includes('|')&&!confirm('Es un bloque fijo. ¿Quieres modificarlo?'))return;eb=k;rSemana();$('#bt').focus()}
+else if(b.dataset.bcan){eb=null;rSemana()}
+else if(b.dataset.bdel){if(String(eb).includes('|')){if(!confirm('Es un bloque fijo. ¿Borrarlo?'))return;S.ov[eb]=null}else S.blocks=S.blocks.filter(x=>String(x.id)!==String(eb));eb=null;save();all()}
+else if(b.dataset.mv){const[i,dr]=b.dataset.mv.split('|'),t=S.tasks.find(x=>x.id==i),O=['p','e','l'],n=O[O.indexOf(t.st)+ +dr];if(n){t.st=n;t.d=n==='l';save();all();if(t.d)toast('¡Lograda! '+t.t)}}
+else if(b.dataset.up||b.dataset.dn){const id=b.dataset.up||b.dataset.dn,i=S.tasks.findIndex(x=>x.id==id),j=i+(b.dataset.up?-1:1);if(S.tasks[j]){[S.tasks[i],S.tasks[j]]=[S.tasks[j],S.tasks[i]];save();all()}}
+else if(b.id==='pdf')print()});
+document.addEventListener('submit',e=>{e.preventDefault();const id=e.target.id;
+if(id==='fa')S.tasks.push({id:Date.now(),t:$('#tn').value.trim(),g:$('#tg').value.trim(),m:+$('#tm').value,f:$('#tf').value,st:'p',d:false});
+else if(id==='fb'){const o={s:$('#bs').value||'Todo el día',e:$('#be').value,t:$('#bt').value.trim(),c:$('#bc').value},nd=+$('#bd').value;
+if(eb===null)S.blocks.push({id:Date.now(),d:nd,...o});
+else if(String(eb).includes('|')){const d=+String(eb).split('|')[0];if(nd===d)S.ov[eb]=o;else{S.ov[eb]=null;S.blocks.push({id:Date.now(),d:nd,...o})}}
+else Object.assign(S.blocks.find(x=>String(x.id)===String(eb)),o,{d:nd});
+eb=null;selDay=nd}
+save();all()});
+all();
+</script>
+</body>
+</html>
